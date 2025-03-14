@@ -7,14 +7,11 @@ import lombok.Setter;
 import java.time.Duration;
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 public class Film {
-    int id;
-    String name;
-    String description;
-    LocalDate releaseDate;
-    Duration duration;
+    private Long id;
+    private String name;
+    private String description;
+    private LocalDate releaseDate;
+    private Duration duration;
 }
