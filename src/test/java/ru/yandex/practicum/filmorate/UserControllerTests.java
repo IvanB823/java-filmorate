@@ -58,7 +58,7 @@ public class UserControllerTests {
     @Test
     void emptyAndNullLoginTest() {
         User user = new User("maddy@mail.ru", "", "Мэдисон Майки", LocalDate.of(1999, 3, 25));
-        User user2 = new User( "maddy@mail.ru", null, "Мэдисон Майки", LocalDate.of(1999, 3, 25));
+        User user2 = new User("maddy@mail.ru", null, "Мэдисон Майки", LocalDate.of(1999, 3, 25));
         assertThrows(ValidationException.class, () -> {
             userController.postUser(user);
         });
@@ -70,7 +70,7 @@ public class UserControllerTests {
     @Test
     void emptyAndNullEmailTest() {
         User user = new User("", "Mikey_danceLover", "Мэдисон Майки", LocalDate.of(1999, 3, 25));
-        User user2 = new User( null, "Mikey_danceLover", "Мэдисон Майки", LocalDate.of(1999, 3, 25));
+        User user2 = new User(null, "Mikey_danceLover", "Мэдисон Майки", LocalDate.of(1999, 3, 25));
         assertThrows(ValidationException.class, () -> {
             userController.postUser(user);
         });
