@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    Map<Long, User> users = new HashMap<>();
+    Map<Integer, User> users = new HashMap<>();
 
     @GetMapping
     public Collection<User> getAllUsers() {
@@ -24,22 +24,22 @@ public class UserController {
 
     @PostMapping
     public User postUser(@RequestBody User user) {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             String info = "Email должен быть корректным и не пустым";
             log.error("Ошибка при добавлении пользователя: {}", info);
             throw new ValidationException(info);
         }
-        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             String info = "Логин не должен быть пустым и не должен содержать пробелы";
             log.error("Ошибка при добавлении пользователя: {}", info);
             throw new ValidationException(info);
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
             String info = "Дата рождения не может быть в будущем";
             log.error("Ошибка при добавлении пользователя: {}", info);
             throw new ValidationException(info);
         }
-        if (user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             log.warn("Предупреждение, поле name пусто, в него будет записан login = {}", user.getLogin());
             user.setName(user.getLogin());
         }
@@ -84,10 +84,10 @@ public class UserController {
         return oldUser;
     }
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
+    private int getNextId() {
+        int currentMaxId = users.keySet()
                 .stream()
-                .mapToLong(id -> id)
+                .mapToInt(id -> id)
                 .max()
                 .orElse(0);
         return ++currentMaxId;

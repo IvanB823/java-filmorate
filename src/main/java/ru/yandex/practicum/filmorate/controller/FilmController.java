@@ -14,7 +14,7 @@ import java.util.Map;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    Map<Long, Film> films = new HashMap<>();
+    Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping
     public Collection<Film> getAllFilms() {
@@ -24,6 +24,11 @@ public class FilmController {
     @PostMapping
     public Film postFilm(@RequestBody Film film) {
         validate(film);
+        if (film.getName() == null) {
+            String str = "Название фильмо должно быть указано";
+            log.error(str);
+            throw new ValidationException(str);
+        }
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.info("Фильм {} добавлен в базу", film.getName());
@@ -37,18 +42,27 @@ public class FilmController {
             log.error("Ошибка при обновлении фильма: {}", info);
             throw new ValidationException(info);
         }
-        validate(newFilm);
-        Film oldFilm = films.get(newFilm.getId());
-        oldFilm.setName(newFilm.getName());
-        oldFilm.setDescription(newFilm.getDescription());
-        oldFilm.setReleaseDate(newFilm.getReleaseDate());
-        oldFilm.setDuration(newFilm.getDuration());
-        log.info("Фильм {} обновлён успешно", oldFilm.getName());
-        return oldFilm;
+        if (films.containsKey(newFilm.getId())) {
+            validate(newFilm);
+            Film oldFilm = films.get(newFilm.getId());
+            if (newFilm.getName() != null) {
+                oldFilm.setName(newFilm.getName());
+            }
+            oldFilm.setDescription(newFilm.getDescription());
+            oldFilm.setReleaseDate(newFilm.getReleaseDate());
+            oldFilm.setDuration(newFilm.getDuration());
+            log.info("Фильм {} обновлён успешно", oldFilm.getName());
+            return oldFilm;
+        } else {
+            String str = "Обновляемый фильм не найден!";
+            log.error(str);
+            throw new ValidationException(str);
+        }
     }
 
     private void validate(Film film) {
-        if (film.getName().isBlank() ||
+        if (film.getName() == null ||
+                film.getName().isBlank() ||
                 film.getDescription().length() > 200 ||
                 film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)) ||
                 film.getDuration().isNegative()) {
@@ -57,10 +71,10 @@ public class FilmController {
         }
     }
 
-    private Long getNextId() {
-        long currentMaxId = films.keySet()
+    private int getNextId() {
+        int currentMaxId = films.keySet()
                 .stream()
-                .mapToLong(id -> id)
+                .mapToInt(id -> id)
                 .max()
                 .orElse(0);
         return ++currentMaxId;
