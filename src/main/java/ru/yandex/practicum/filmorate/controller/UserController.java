@@ -39,7 +39,7 @@ public class UserController {
             log.error("Ошибка при добавлении пользователя: {}", info);
             throw new ValidationException(info);
         }
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank() || user.getName().contains(" ")) {
             log.warn("Предупреждение, поле name пусто, в него будет записан login = {}", user.getLogin());
             user.setName(user.getLogin());
         }
