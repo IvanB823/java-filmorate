@@ -25,12 +25,12 @@ public class UserControllerTests {
 
     @Test
     void getAllUsersAndPostUserTest() {
-        User user = new User("igor@mail.ru", "Igor_with_granny's_car", "Юрий Борисов", LocalDate.of(1992, 12, 8));
+        User user = new User("Sean84@gmail.com", "OrK6qvD8JY", "Marcia Cartwright", LocalDate.of(1992, 12, 8));
         User createdUser = userController.postUser(user);
         List<User> users = new ArrayList<>(userController.getAllUsers());
         assertNotNull(createdUser);
         assertEquals(1, users.size());
-        assertEquals("igor@mail.ru", users.getFirst().getEmail());
+        assertEquals("Sean84@gmail.com", users.get(0).getEmail());
     }
 
     @Test
