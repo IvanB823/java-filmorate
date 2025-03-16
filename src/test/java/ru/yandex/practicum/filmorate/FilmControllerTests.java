@@ -25,7 +25,7 @@ public class FilmControllerTests {
     }
 
     @Test
-    void getAllFilmsAndPostFilmTest(){
+    void getAllFilmsAndPostFilmTest() {
         Film film = Film.builder()
                 .name("Anora")
                 .description("Censored")
