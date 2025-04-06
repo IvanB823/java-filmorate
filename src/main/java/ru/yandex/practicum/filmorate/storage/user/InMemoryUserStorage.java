@@ -93,8 +93,7 @@ public class InMemoryUserStorage  implements UserStorage{
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
-
-
+    @Override
     public boolean userExists(Long userId) {
         return users.containsKey(userId);
     }
