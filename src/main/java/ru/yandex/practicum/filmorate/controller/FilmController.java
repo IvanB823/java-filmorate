@@ -14,7 +14,7 @@ import java.util.Map;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    Map<Integer, Film> films = new HashMap<>();
+    Map<Long, Film> films = new HashMap<>();
 
     @GetMapping
     public Collection<Film> getAllFilms() {
@@ -71,7 +71,7 @@ public class FilmController {
         }
     }
 
-    private int getNextId() {
+    private long getNextId() {
         int currentMaxId = films.keySet()
                 .stream()
                 .mapToInt(id -> id)
