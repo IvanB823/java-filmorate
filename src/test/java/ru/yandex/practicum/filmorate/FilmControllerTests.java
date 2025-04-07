@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -69,7 +71,7 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(2024, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film2);
         });
     }
@@ -132,10 +134,10 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(1894, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film2);
         });
     }
@@ -154,10 +156,10 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(1894, 10, 18))
                 .duration(Duration.ofMinutes(0))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film2);
         });
     }

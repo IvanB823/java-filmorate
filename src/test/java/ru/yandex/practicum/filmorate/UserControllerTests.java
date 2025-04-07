@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -92,7 +93,7 @@ public class UserControllerTests {
     @Test
     void updatingNonExistentUserTest() {
         User user = new User(1L, "maddy@mail.ru", "Mikey_danceLover", "Мэдисон Майки", LocalDate.of(2999, 3, 25));
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             userController.updateUser(user);
         });
     }
