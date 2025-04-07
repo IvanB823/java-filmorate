@@ -58,7 +58,6 @@ public class UserService {
     public User updateUser(User newUser) {
         if (newUser.getId() == null) {
             String message = "Id пользователя должен быть указан";
-            log.error("Ошибка при обновлении пользователя: {}", message);
             throw new ConditionsNotMetException(message);
         }
         if (userStorage.userExists(newUser.getId())) {

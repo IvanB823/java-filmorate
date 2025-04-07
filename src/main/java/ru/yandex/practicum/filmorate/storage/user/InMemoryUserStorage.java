@@ -36,30 +36,25 @@ public class InMemoryUserStorage  implements UserStorage {
     }
 
     @Override
-    public User putUser(@RequestBody User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            String info = "Email должен быть корректным и не пустым";
-            log.error("Ошибка при добавлении пользователя: {}", info);
-            throw new ValidationException(info);
+    public User putUser(User newUser) {
+        User oldUser = users.get(newUser.getId());
+        if (newUser.getEmail() != null) {
+            oldUser.setEmail(newUser.getEmail());
         }
-        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            String info = "Логин не должен быть пустым и не должен содержать пробелы";
-            log.error("Ошибка при добавлении пользователя: {}", info);
-            throw new ValidationException(info);
+        if (newUser.getLogin() != null) {
+            oldUser.setLogin(newUser.getLogin());
         }
-        if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            String info = "Дата рождения не может быть в будущем";
-            log.error("Ошибка при добавлении пользователя: {}", info);
-            throw new ValidationException(info);
+        if (newUser.getBirthday() != null) {
+            oldUser.setBirthday(newUser.getBirthday());
         }
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.warn("Предупреждение, поле name пусто, в него будет записан login = {}", user.getLogin());
-            user.setName(user.getLogin());
+        if (newUser.getName() != null) {
+            oldUser.setName(newUser.getName());
         }
-        user.setId(getNextId());
-        users.put(user.getId(), user);
-        log.info("Пользователь {} успешно создан и добавлен в систему", user.getName());
-        return user;
+        if (newUser.getName() == null || newUser.getName().isBlank()) {
+            oldUser.setName(newUser.getLogin());
+        }
+        log.info("Пользователь обновлён: {}", oldUser);
+        return oldUser;
     }
 
     @Override
