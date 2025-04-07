@@ -4,15 +4,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class User {
-    private Integer id;
+    private Long id;
     private String email;
     private String login;
     private String name;
     private LocalDate birthday;
+    private Set<Long> friends;
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -21,7 +23,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    public User(Integer id, String email, String login, String name, LocalDate birthday) {
+    public User(Long id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
         this.email = email;
         this.login = login;
