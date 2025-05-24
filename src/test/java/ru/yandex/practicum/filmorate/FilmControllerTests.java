@@ -4,8 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -21,7 +26,7 @@ public class FilmControllerTests {
 
     @BeforeEach
     void setUp() {
-        filmController = new FilmController();
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
     }
 
     @Test
@@ -32,7 +37,7 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(2024, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        filmController.postFilm(film);
+        filmController.addFilm(film);
         assertNotNull(filmController.getAllFilms());
     }
 
@@ -45,13 +50,13 @@ public class FilmControllerTests {
                 .duration(Duration.ofMinutes(139))
                 .build();
         Film film2 = Film.builder()
-                .id(1)
+                .id(1L)
                 .name("Anora2")
                 .description("Censored")
                 .releaseDate(LocalDate.of(2024, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        filmController.postFilm(film);
+        filmController.addFilm(film);
         filmController.updateFilm(film2);
         List<Film> films = new ArrayList<>(filmController.getAllFilms());
         assertEquals("Anora2", films.getFirst().getName());
@@ -60,13 +65,13 @@ public class FilmControllerTests {
     @Test
     void updatingNonExistentFilmTest() {
         Film film2 = Film.builder()
-                .id(1)
+                .id(1L)
                 .name("Anora2")
                 .description("Censored")
                 .releaseDate(LocalDate.of(2024, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film2);
         });
     }
@@ -86,9 +91,9 @@ public class FilmControllerTests {
                 .duration(Duration.ofMinutes(139))
                 .build();
         assertThrows(ValidationException.class, () -> {
-            filmController.postFilm(film);
+            filmController.addFilm(film);
         });
-        Film film3 = filmController.postFilm(film2);
+        Film film3 = filmController.addFilm(film2);
         assertEquals(200, film3.getDescription().length());
     }
 
@@ -108,10 +113,10 @@ public class FilmControllerTests {
                 .build();
 
         assertThrows(ValidationException.class, () -> {
-            filmController.postFilm(film);
+            filmController.addFilm(film);
         });
         assertThrows(ValidationException.class, () -> {
-            filmController.postFilm(film2);
+            filmController.addFilm(film2);
         });
     }
 
@@ -129,10 +134,10 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(1894, 10, 18))
                 .duration(Duration.ofMinutes(139))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film2);
         });
     }
@@ -151,10 +156,10 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(1894, 10, 18))
                 .duration(Duration.ofMinutes(0))
                 .build();
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film2);
         });
     }
