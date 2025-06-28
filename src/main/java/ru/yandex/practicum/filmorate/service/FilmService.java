@@ -60,7 +60,7 @@ public class FilmService {
             ratingService.exists(newFilm);
             genreService.exists(newFilm);
             return filmStorage.updateFilm(newFilm);
-            return filmStorage.putFilm(newFilm);
+            return filmStorage.updateFilm(newFilm);
         }
         log.error("Фильм не найден id = {} ", newFilm.getId());
         throw new NotFoundException("Фильм не найден id = " + newFilm.getId());

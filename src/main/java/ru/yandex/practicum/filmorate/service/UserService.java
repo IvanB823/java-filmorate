@@ -72,7 +72,7 @@ public class UserService {
             if (newUser.getBirthday().isAfter(LocalDate.now())) {
                 throw new ValidationException("Дата рождения пользователя не должна быть в будущем");
             }
-            return userStorage.putUser(newUser);
+            return userStorage.updateUser(newUser);
         }
         log.error("Пользователь с id {} не найден", newUser.getId());
         throw new NotFoundException("Не найден пользователь с id " + newUser.getId());
