@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -23,9 +24,10 @@ public class UserService {
     private UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+            this.userStorage = userStorage;
     }
+
 
     public Collection<User> getAllUsers() {
         return userStorage.findAllUsers();
@@ -106,6 +108,11 @@ public class UserService {
         User otherUser = userStorage.findUserById(otherId)
                 .orElseThrow(() -> new NotFoundException("Не найден второй пользователь с id: " + otherId));
         return userStorage.findCommonFriends(user, otherUser);
+    }
+
+    public boolean deleteUserById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("Invalid User id");
+        return userStorage.deleteUserById(id);
     }
 
     public User getUserById(Long id) {
