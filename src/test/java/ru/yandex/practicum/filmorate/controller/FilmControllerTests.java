@@ -42,7 +42,6 @@ public class FilmControllerTests {
                 film.setDescription("Censored");
                 film.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film.setDuration(Duration.ofMinutes(139));
-                 
         filmController.addFilm(film);
         assertNotNull(filmController.getAllFilms());
     }
@@ -54,14 +53,13 @@ public class FilmControllerTests {
                 film.setDescription("Censored");
                 film.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film.setDuration(Duration.ofMinutes(139));
-                 
+
         Film film2 = new Film();
                 film2.setId(1L);
                 film2.setName("Anora2");
                 film2.setDescription("Censored");
                 film2.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film2.setDuration(Duration.ofMinutes(139));
-                 
         filmController.addFilm(film);
         filmController.updateFilm(film2);
         List<Film> films = new ArrayList<>(filmController.getAllFilms());
@@ -76,7 +74,6 @@ public class FilmControllerTests {
                 film2.setDescription("Censored");
                 film2.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film2.setDuration(Duration.ofMinutes(139));
-                 
         assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film2);
         });
@@ -89,13 +86,11 @@ public class FilmControllerTests {
                 film.setDescription("1".repeat(201));
                 film.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film.setDuration(Duration.ofMinutes(139));
-                 
         Film film2 = new Film();
                 film2.setName("Anora2");
                 film2.setDescription("1".repeat(200));
                 film2.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film2.setDuration(Duration.ofMinutes(139));
-                 
         assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         });
@@ -110,14 +105,11 @@ public class FilmControllerTests {
                 film.setDescription("Censored");
                 film.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film.setDuration(Duration.ofMinutes(139));
-                 
         Film film2 = new Film();
                 film.setName(null);
                 film.setDescription("Censored");
                 film.setReleaseDate(LocalDate.of(2024, 10, 18));
                 film.setDuration(Duration.ofMinutes(139));
-                 
-
         assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         });
@@ -133,13 +125,11 @@ public class FilmControllerTests {
                 film1.setDescription("Censored");
                 film1.setReleaseDate(LocalDate.of(1895, 12, 28));
                 film1.setDuration(Duration.ofMinutes(139));
-                 
         Film film2 = new Film();
                 film2.setName("Anora2");
                 film2.setDescription("Censored");
                 film2.setReleaseDate(LocalDate.of(1894, 10, 18));
                 film2.setDuration(Duration.ofMinutes(139));
-                 
         assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
@@ -155,13 +145,11 @@ public class FilmControllerTests {
                 film1.setDescription("Censored");
                 film1.setReleaseDate(LocalDate.of(1895, 12, 28));
                 film1.setDuration(Duration.ofMinutes(-1));
-                 
         Film film2 = new Film();
                 film2.setName("Anora2");
                 film2.setDescription("Censored");
                 film2.setReleaseDate(LocalDate.of(1894, 10, 18));
                 film2.setDuration(Duration.ofMinutes(0));
-                 
         assertThrows(ConditionsNotMetException.class, () -> {
             filmController.updateFilm(film1);
         });
