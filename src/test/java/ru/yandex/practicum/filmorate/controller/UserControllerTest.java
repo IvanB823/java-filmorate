@@ -98,7 +98,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Логин не может быть пустым и содержать пробелы"));
+        assertTrue(exception.getMessage().contains("Логин не должен быть пустым и содержать пробелы"));
     }
 
     @Test
@@ -114,7 +114,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Логин не может быть пустым и содержать пробелы"));
+        assertTrue(exception.getMessage().contains("Логин не должен быть пустым и содержать пробелы"));
     }
 
     @Test
@@ -130,7 +130,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Логин не может быть пустым и содержать пробелы"));
+        assertTrue(exception.getMessage().contains("Логин не должен быть пустым и содержать пробелы"));
     }
 
     @Test
@@ -146,7 +146,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Электронная почта не может быть пустой и должна содержать символ @"));
+        assertTrue(exception.getMessage().contains("Электронная почта не должна быть пустой и должна содержать символ @"));
     }
 
     @Test
@@ -162,7 +162,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Электронная почта не может быть пустой и должна содержать символ @"));
+        assertTrue(exception.getMessage().contains("Электронная почта не должна быть пустой и должна содержать символ @"));
     }
 
     @Test
@@ -178,7 +178,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Электронная почта не может быть пустой и должна содержать символ @"));
+        assertTrue(exception.getMessage().contains("Электронная почта не должна быть пустой и должна содержать символ @"));
     }
 
     @Test
@@ -224,7 +224,7 @@ class UserControllerTest {
             userController.addUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Дата рождения не может быть в будущем"));
+        assertTrue(exception.getMessage().contains("Дата рождения не должна быть в будущем"));
     }
 
     @Test
@@ -256,6 +256,6 @@ class UserControllerTest {
             userController.updateUser(user);
         });
 
-        assertTrue(exception.getMessage().contains("Пользователь с id = " + user.getId() + " не найден"));
+        assertTrue(exception.getMessage().contains("Не найден пользователь с id " + user.getId()));
     }
 }
