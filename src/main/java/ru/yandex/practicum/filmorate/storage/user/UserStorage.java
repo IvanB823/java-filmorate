@@ -24,7 +24,7 @@ public interface UserStorage {
 
     List<User> findCommonFriends(User user, User otherUser);
 
-    boolean userExists(Long userId);
+    boolean hasUsersId(Long userId);
 
     boolean deleteUserById(Long id);
 }

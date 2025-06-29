@@ -62,7 +62,7 @@ public class UserService {
             String message = "Id пользователя должен быть указан";
             throw new ConditionsNotMetException(message);
         }
-        if (userStorage.userExists(newUser.getId())) {
+        if (userStorage.hasUsersId(newUser.getId())) {
             if (!newUser.getEmail().contains("@")) {
                 throw new ValidationException("Электронная пользователя почта должна содержать символ @");
             }
