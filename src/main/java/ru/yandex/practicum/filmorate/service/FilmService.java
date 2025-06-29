@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -17,8 +18,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class FilmService {
-    private FilmStorage filmStorage;
-    private UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
     private final RatingService ratingService;
     private final GenreService genreService;
 
@@ -59,7 +60,6 @@ public class FilmService {
             validate(newFilm);
             ratingService.exists(newFilm);
             genreService.exists(newFilm);
-            return filmStorage.updateFilm(newFilm);
             return filmStorage.updateFilm(newFilm);
         }
         log.error("Фильм не найден id = {} ", newFilm.getId());
