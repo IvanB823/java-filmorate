@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -17,13 +18,20 @@ import java.util.List;
 @Slf4j
 @Service
 public class FilmService {
-    private FilmStorage filmStorage;
-    private UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private final RatingService ratingService;
+    private final GenreService genreService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage,
+                       @Qualifier("userDbStorage") UserStorage userStorage,
+                       RatingService ratingService,
+                       GenreService genreService) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.ratingService = ratingService;
+        this.genreService = genreService;
     }
 
     public Collection<Film> getAllFilms() {
@@ -37,6 +45,8 @@ public class FilmService {
             throw new ValidationException(message);
         }
         validate(film);
+        ratingService.exists(film);
+        genreService.exists(film);
         return filmStorage.saveFilm(film);
     }
 
@@ -48,7 +58,9 @@ public class FilmService {
         }
         if (filmStorage.hasFilmsId(newFilm.getId())) {
             validate(newFilm);
-            return filmStorage.putFilm(newFilm);
+            ratingService.exists(newFilm);
+            genreService.exists(newFilm);
+            return filmStorage.updateFilm(newFilm);
         }
         log.error("Фильм не найден id = {} ", newFilm.getId());
         throw new NotFoundException("Фильм не найден id = " + newFilm.getId());
@@ -59,8 +71,7 @@ public class FilmService {
                 .orElseThrow(() -> new NotFoundException("Не найден фильм не найден id: " + filmId));
         userStorage.findUserById(userId)
                 .orElseThrow(() -> new NotFoundException("Не найден пользователь с id: " + userId));
-
-        filmStorage.putLike(film, userId);
+        filmStorage.addLike(film, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
@@ -75,6 +86,12 @@ public class FilmService {
         return filmStorage.findFilmById(id)
                 .orElseThrow(() -> new NotFoundException("Фильм не найден id = " + id));
     }
+
+    public boolean deleteFilmById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("Фильм с id = " + id + " не найден");
+        return filmStorage.deleteFilmById(id);
+    }
+
 
     public List<Film> getMostPopularFilms(int count) {
         return filmStorage.findMostPopularFilms(count);

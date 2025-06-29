@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -23,9 +24,10 @@ public class UserService {
     private UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+            this.userStorage = userStorage;
     }
+
 
     public Collection<User> getAllUsers() {
         return userStorage.findAllUsers();
@@ -60,7 +62,7 @@ public class UserService {
             String message = "Id пользователя должен быть указан";
             throw new ConditionsNotMetException(message);
         }
-        if (userStorage.userExists(newUser.getId())) {
+        if (userStorage.hasUsersId(newUser.getId())) {
             if (!newUser.getEmail().contains("@")) {
                 throw new ValidationException("Электронная пользователя почта должна содержать символ @");
             }
@@ -70,7 +72,7 @@ public class UserService {
             if (newUser.getBirthday().isAfter(LocalDate.now())) {
                 throw new ValidationException("Дата рождения пользователя не должна быть в будущем");
             }
-            return userStorage.putUser(newUser);
+            return userStorage.updateUser(newUser);
         }
         log.error("Пользователь с id {} не найден", newUser.getId());
         throw new NotFoundException("Не найден пользователь с id " + newUser.getId());
@@ -106,6 +108,11 @@ public class UserService {
         User otherUser = userStorage.findUserById(otherId)
                 .orElseThrow(() -> new NotFoundException("Не найден второй пользователь с id: " + otherId));
         return userStorage.findCommonFriends(user, otherUser);
+    }
+
+    public boolean deleteUserById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("Invalid User id");
+        return userStorage.deleteUserById(id);
     }
 
     public User getUserById(Long id) {

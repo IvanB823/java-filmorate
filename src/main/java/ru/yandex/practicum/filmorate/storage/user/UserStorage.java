@@ -12,7 +12,7 @@ public interface UserStorage {
 
     User saveUser(User user);
 
-    User putUser(User user);
+    User updateUser(User user);
 
     Optional<User> findUserById(Long id);
 
@@ -24,5 +24,7 @@ public interface UserStorage {
 
     List<User> findCommonFriends(User user, User otherUser);
 
-    boolean userExists(Long userId);
+    boolean hasUsersId(Long userId);
+
+    boolean deleteUserById(Long id);
 }
